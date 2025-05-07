@@ -1,17 +1,17 @@
 //create user
 import { NextRequest, NextResponse } from "next/server";
 import { dbColectivero } from "@/lib/firebase";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { UserSchema } from "@/db/user.schema";
-import { hash, randomUUID } from "crypto";
+import { randomUUID } from "crypto";
 import { hashPassword } from "@/lib/handlePassword";
 
-const validateUser = UserSchema.omit({ _id: true });
+const validateUser = UserSchema.omit({ _id: true, createdAt: true });
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const result = validateUser.safeParse(body);
   try {
+    const body = await req.json();
+    const result = validateUser.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
         { error: "Invalid user data", details: result.error.format() },
@@ -22,8 +22,8 @@ export async function POST(req: NextRequest) {
     const user = result.data;
     const ref = doc(collection(dbColectivero, "users"), _id);
     user.password = await hashPassword(user.password);
-    
-    await setDoc(ref, user);
+    const createdAt = new Date().toISOString();
+    await setDoc(ref, { ...user, createdAt });
     return NextResponse.json({ message: "User created successfully" }, { status: 201 }
     );
   } catch (err: any) {
@@ -31,4 +31,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to create user", details: err.message }, { status: 500 }
     );
   }
+}
+// get user by email
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const email = searchParams.get("email");
+  //involve into trycath
+  try {
+    //email is in users collection, get user by email with where clause
+    const ref = query(collection(dbColectivero, "users"), where("email", "==", email));
+    const docSnap = await getDocs(ref);
+    if (docSnap.empty) {
+      return NextResponse.json(
+        { error: "User not found" },
+        { status: 404 }
+      );
+    }
+    const user = docSnap.docs[0].data();
+    return NextResponse.json({
+      message: "User found",
+      user: user,
+      status: 200,
+    });
+  } catch (err: any) {
+  console.error("[USER_GET_ERROR]", err);
+  return NextResponse.json({ error: "Failed to get user", details: err.message }, { status: 500 }
+  );
+}
 }

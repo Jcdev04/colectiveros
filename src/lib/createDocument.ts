@@ -5,7 +5,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { dbColectivero } from "@/lib/firebase";
 import { randomUUID } from "crypto";
 
-export async function createLocation<T extends { _id: string }>(
+export async function createLocation<T extends { name: string }>(
   collectionName: string,
   schema: any,
   body: unknown
@@ -15,13 +15,13 @@ export async function createLocation<T extends { _id: string }>(
   
   if (!result.success) {
     return NextResponse.json(
-      { error: "Invalid data", details: result.error.format() },
-      { status: 400 }
+      { error: "Invalid data", details: result.error.format(), status: 400 }
     );
   }
   const _id = randomUUID();
   const data: T = result.data;
   const ref = doc(collection(dbColectivero, collectionName), _id);
   await setDoc(ref, data);
-  return NextResponse.json({ message: `${collectionName} created` }, { status: 201 });
+  return NextResponse.json({ message: `${collectionName} created`,status: 201, data: { _id, ...data} 
+  });
 }

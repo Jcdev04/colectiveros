@@ -28,3 +28,10 @@ export async function POST(req: NextRequest) {
     console.error("[ROUTE_POST_ERROR]", err);
     return NextResponse.json(
       {
+        error: "Failed to create route",
+        details: err.message,
+      },
+      { status: 500 }
+    );
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "routes": [
+    {
+      "_id": "r1",
+      "company_id": "c1",
+      "company_name": "Transportes San Juan",
+      "origin_id": "s1",
+      "origin_name": "Paradero Plaza de Armas",
+      "destination_id": "s2",
+      "destination_name": "Paradero Mercado Central",
+      "stations": [
+        {
+          "station_id": "s1",
+          "order": 0,
+          "name": "Paradero Plaza de Armas",
+          "address": "Plaza de Armas, Huaraz",
+          "reference": "Frente a la Catedral"
+        },
+        {
+          "station_id": "s3",
+          "order": 1,
+          "name": "Paradero Hospital",
+          "address": "Av. Luzuriaga, Huaraz",
+          "reference": "Frente al Hospital Regional"
+        },
+        {
+          "station_id": "s2",
+          "order": 2,
+          "name": "Paradero Mercado Central",
+          "address": "Jr. José Olaya, Huaraz",
+          "reference": "Frente al Mercado Central"
+        }
+      ],
+      "duration_minutes": 20,
+      "fare_pen": 2.50,
+      "schedule": {
+        "type": "fixed",
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        "hours": {
+          "from": "06:00",
+          "to": "22:00"
+        }
+      }
+    },
+    {
+      "_id": "r2",
+      "company_id": "c2",
+      "company_name": "Transportes Ancash",
+      "origin_id": "s4",
+      "origin_name": "Paradero Terminal",
+      "destination_id": "s5",
+      "destination_name": "Paradero Universidad",
+      "stations": [
+        {
+          "station_id": "s4",
+          "order": 0,
+          "name": "Paradero Terminal",
+          "address": "Av. Centenario, Huaraz",
+          "reference": "Frente al Terminal Terrestre"
+        },
+        {
+          "station_id": "s6",
+          "order": 1,
+          "name": "Paradero Colegio",
+          "address": "Av. Luzuriaga, Huaraz",
+          "reference": "Frente al Colegio Nacional"
+        },
+        {
+          "station_id": "s5",
+          "order": 2,
+          "name": "Paradero Universidad",
+          "address": "Av. Centenario, Huaraz",
+          "reference": "Frente a la Universidad"
+        }
+      ],
+      "duration_minutes": 15,
+      "fare_pen": 2.00,
+      "schedule": {
+        "type": "fixed",
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "hours": {
+          "from": "07:00",
+          "to": "21:00"
+        }
+      }
+    },
+    {
+      "_id": "r3",
+      "company_id": "c1",
+      "company_name": "Transportes San Juan",
+      "origin_id": "s7",
+      "origin_name": "Paradero Mercado",
+      "destination_id": "s8",
+      "destination_name": "Paradero Estadio",
+      "stations": [
+        {
+          "station_id": "s7",
+          "order": 0,
+          "name": "Paradero Mercado",
+          "address": "Jr. José Olaya, Huaraz",
+          "reference": "Frente al Mercado Modelo"
+        },
+        {
+          "station_id": "s9",
+          "order": 1,
+          "name": "Paradero Parque",
+          "address": "Av. Luzuriaga, Huaraz",
+          "reference": "Frente al Parque Ginebra"
+        },
+        {
+          "station_id": "s8",
+          "order": 2,
+          "name": "Paradero Estadio",
+          "address": "Av. Centenario, Huaraz",
+          "reference": "Frente al Estadio Rosas Pampa"
+        }
+      ],
+      "duration_minutes": 25,
+      "fare_pen": 3.00,
+      "schedule": {
+        "type": "fixed",
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        "hours": {
+          "from": "05:00",
+          "to": "23:00"
+        }
+      }
+    },
+    {
+      "_id": "r4",
+      "company_id": "c2",
+      "company_name": "Transportes Ancash",
+      "origin_id": "s10",
+      "origin_name": "Paradero Hospital",
+      "destination_id": "s11",
+      "destination_name": "Paradero Terminal",
+      "stations": [
+        {
+          "station_id": "s10",
+          "order": 0,
+          "name": "Paradero Hospital",
+          "address": "Av. Luzuriaga, Huaraz",
+          "reference": "Frente al Hospital Regional"
+        },
+        {
+          "station_id": "s12",
+          "order": 1,
+          "name": "Paradero Plaza",
+          "address": "Plaza de Armas, Huaraz",
+          "reference": "Frente a la Municipalidad"
+        },
+        {
+          "station_id": "s11",
+          "order": 2,
+          "name": "Paradero Terminal",
+          "address": "Av. Centenario, Huaraz",
+          "reference": "Frente al Terminal Terrestre"
+        }
+      ],
+      "duration_minutes": 30,
+      "fare_pen": 2.50,
+      "schedule": {
+        "type": "fixed",
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        "hours": {
+          "from": "06:00",
+          "to": "22:00"
+        }
+      }
+    }
+  ]
+} 

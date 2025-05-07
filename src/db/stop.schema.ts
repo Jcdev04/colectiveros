@@ -1,13 +1,12 @@
 import { z } from "zod";
 
-export const StationSchema = z.object({
+export const StopSchema = z.object({
   _id: z.string(),
   locality_id: z.string(),
   region_id: z.string(),
   province_id: z.string(),
   district_id: z.string(),
   country_id: z.string(),
-  name: z.string(),
   address: z.string().optional(),
   reference: z.string().optional(),
   coordinates: z
@@ -17,5 +16,6 @@ export const StationSchema = z.object({
     })
     .optional(),
   google_maps_url: z.string().url().optional(),
+  name: z.string(),
 });
-export type Station = z.infer<typeof StationSchema>;
+export type Station = z.infer<typeof StopSchema>;
