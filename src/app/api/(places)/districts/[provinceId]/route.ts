@@ -1,15 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { dbColectivero } from "@/lib/firebase";
 
-export async function GET(
-  context : {  params: Promise<{ provinceId: string }> }
-) {
+interface Id {
+  provinceId: string
+}
+
+export async function GET(req: NextRequest, {params}:{params:Id}) {
   try {
-    const params = await context.params;
+    const param = await params
     const q = query(
       collection(dbColectivero, "districts"),
-      where("province_id", "==", params.provinceId)
+      where("province_id", "==", param.provinceId)
     );
     const querySnapshot = await getDocs(q);
     const districts = querySnapshot.docs.map((doc) => ({

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ScheduleSchema = z.object({
-  days: z.enum(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]),
+  days: z.enum(["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]),
   hours: z
     .object({
       from: z.string(), // "HH:mm"

@@ -5,8 +5,11 @@ import { getAllDocuments} from "@/lib/getAllDocuments";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  // common function to create locations
   return createLocation("countries", CountrySchema, body);
 }
+
+
 export async function GET() {
   return getAllDocuments("countries");
 }

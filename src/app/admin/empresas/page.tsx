@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Company, CompanySchema } from "@/db/company.schema";
+import { Company } from "@/db/company.schema";
 import { useEffect, useState } from "react";
 
 export default function CompaniesPage() {
@@ -12,10 +12,16 @@ export default function CompaniesPage() {
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
+        logo: ""
     }); 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    /**
+     * Send all messages
+     * @param e -> Event onSubmit
+     */
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
@@ -36,6 +42,7 @@ export default function CompaniesPage() {
             setIsLoading(false);
         }
     };
+  // Get all companies and load this to teh interface
   useEffect(() => {
     const fetchCompanies = async () => {
         setIsLoading(true);
@@ -47,9 +54,6 @@ export default function CompaniesPage() {
                 },
             });
             const data = await response.json();
-            if(data.length === 0){
-                throw new Error("Error fetching companies");
-            }
             setCompanies(data);
         } catch (error) {
             console.error("Error fetching companies:", error);
@@ -88,6 +92,13 @@ export default function CompaniesPage() {
                                 id="phone"
                                 name="phone"
                                 value={formData.phone}
+                                onChange={handleChange}
+                            />
+                            <Label htmlFor="logo">Logo</Label>
+                            <Input
+                                id="logo"
+                                name="logo"
+                                value={formData.logo}
                                 onChange={handleChange}
                             />
                             <Button type="submit">Crear Empresa</Button>

@@ -4,8 +4,7 @@ import { NextResponse } from "next/server";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { dbColectivero } from "@/lib/firebase";
 import { randomUUID } from "crypto";
-
-export async function createLocation<T extends { name: string }>(
+export async function createLocation<T extends Object>(
   collectionName: string,
   schema: any,
   body: unknown
@@ -21,7 +20,7 @@ export async function createLocation<T extends { name: string }>(
   const _id = randomUUID();
   const data: T = result.data;
   const ref = doc(collection(dbColectivero, collectionName), _id);
-  await setDoc(ref, data);
+  await setDoc(ref, {...data, _id});
   return NextResponse.json({ message: `${collectionName} created`,status: 201, data: { _id, ...data} 
   });
 }

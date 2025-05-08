@@ -5,8 +5,8 @@ import { NextRequest } from "next/server";
 import { getAllDocuments } from "@/lib/getAllDocuments";
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  return createLocation("districts", DistrictSchema, body);
+    const body = await req.json();
+    return createLocation("districts", DistrictSchema, body);
 }
 
 export async function GET() {

@@ -1,21 +1,228 @@
 "use client";
-/*import { Button } from "@/components/ui/button";
+import { SelectOptions, SelectOptionsByParent } from "@/components/stops/select-options";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Station, StationSchema } from "@/db/station.schema";
+import { Station, StopSchema } from "@/db/stop.schema";
+import { fetchAll } from "@/lib/fetchingBy";
 import { useEffect, useState } from "react";
 
 interface Place {
   _id: string;
   name: string;
 }
-*/
 
 export default function StopsPage(){
+  const [countries, setCountries] = useState<Place[]>([]);
+  const [country, setCountry] = useState<string>("");
+
+  const [regions, setRegions] = useState<Place[]>([]);
+  const [region, setRegion] = useState<string>("");
+  
+  const [provinces, setProvinces] = useState<Place[]>([]);
+  const [province, setProvince] = useState<string>("");
+  
+  const [districts, setDistricts] = useState<Place[]>([]);
+  const [district, setDistrict] = useState<string>("");
+  
+  const [localities, setLocalities] = useState<Place[]>([]);
+  const [locality, setLocality] = useState<string>("");
+  
+  const [companies, setCompanies] = useState<Place[]>([]);
+  const [company, setCompany] = useState<string>("");
+  
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    address: "",
+    reference: "",
+    coordinates: {
+      lat: 0,
+      lng: 0
+    },
+    google_maps_url: "",
+    phone: "",
+    postal_code: "",
+  })
+
+  useEffect(()=>{
+    async function initialLoad(){
+      const [dataCountries, dataCompanies] = await Promise.all([
+        fetchAll("countries"),
+        fetchAll("companies")
+      ])
+      setCountries(dataCountries);
+      setCompanies(dataCompanies);
+    }
+    initialLoad()
+  },[])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>)=>{
+     e.preventDefault();
+    setIsLoading(true);
+    try {
+      const countryName = getNameByIdInState(country, countries)
+      const regionName = getNameByIdInState(region, regions)
+      const provinceName = getNameByIdInState(province, provinces)
+      const districtName = getNameByIdInState(district, districts)
+      const localityName = getNameByIdInState(locality, localities)
+      const companyName = getNameByIdInState(company, companies);
+      const nameStop= `${companyName} - ${localityName}`
+      const body = {
+        ...formData,
+        name: nameStop,
+        locality: {
+          locality_id: locality,
+          locality_name: localityName
+        },
+        district: {
+          district_id: district,
+          district_name: districtName
+        },
+        province: {
+          province_id: province,
+          province_name: provinceName
+        },
+        region: {
+          region_id: region,
+          region_name: regionName
+        },
+        country: {
+          country_id: country,
+          country_name: countryName
+        },
+        company_id: company
+      }
+      
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stops`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({...body}),
+      });
+      const data = await response.json();
+      if (data.status !== 201) throw new Error(data.error);
+      console.log(body)
+      setFormData({
+        ...formData,
+        address: "",
+        reference: "",
+        google_maps_url: "",
+        phone: "",
+        postal_code: "",
+      });
+      setCompany("")
+    } catch (error) {
+      console.error("Error creating station:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const getNameByIdInState = (id:string, state:Place[])=>{
+    return state.find(element => element._id ==id)?.name
+  }
+
   return (
-    <h1>StopsPage</h1>
+     <div className="container mx-auto p-4">
+      <div>
+        <h1 className="text-3xl font-bold">Administrar Paraderos</h1>
+        <p className="text-muted-foreground">Crea y administra paraderos</p>
+      </div>
+      <div className="mt-4 space-y-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Añade paraderos</CardTitle>
+            <CardDescription>Llena todos los campos</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <SelectOptions name="País" options={countries} value={country} setValue={setCountry}/>  
+                <SelectOptionsByParent name="Región" options={regions} setOptions={setRegions} value={region} setValue={setRegion} parentValue={country} endpoint={"regions"}/>  
+                <SelectOptionsByParent name="Provincia" options={provinces} setOptions={setProvinces} value={province} setValue={setProvince} parentValue={region} endpoint={"provinces"}/>  
+                <SelectOptionsByParent name="Distrito" options={districts} setOptions={setDistricts} value={district} setValue={setDistrict} parentValue={province} endpoint={"districts"}/>  
+                <SelectOptionsByParent  name="Localidad" options={localities} setOptions={setLocalities} value={locality} setValue={setLocality} parentValue={district} endpoint={"localities"}/> 
+              </div>
+               {
+                  ( locality &&
+                    <div className="space-y-2">
+               
+              <div className="space-y-2">
+                <SelectOptions name="Empresas de transporte" options={companies} value={company} setValue={setCompany}/>
+              </div>
+              <div className="space-y-2">
+                    <Label htmlFor="address">Dirección</Label>
+                    <Input
+                      id="address"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="reference">Referencia</Label>
+                    <Input
+                      id="reference"
+                      name="reference"
+                      value={formData.reference}
+                      onChange={handleInputChange}
+                      />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="google_maps_url">URL de Google Maps</Label>
+                    <Input
+                      id="google_maps_url"
+                      name="google_maps_url"
+                      type="url"
+                      value={formData.google_maps_url}
+                      onChange={handleInputChange}
+                      />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Número de celular</Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="postal_code">Código Postal</Label>
+                    <Input
+                      id="postal_code"
+                      name="postal_code"
+                      type="text"
+                      value={formData.postal_code}
+                      onChange={handleInputChange}
+                      />
+                  </div>
+
+                  <Button type="submit" disabled={isLoading}>
+                    {isLoading ? "Creando..." : "Crear Paradero"}
+                  </Button>
+                      </div>
+                  )
+                }
+            </form>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent>
+            asda
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   )
 }
 /*
