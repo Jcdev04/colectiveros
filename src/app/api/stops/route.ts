@@ -10,9 +10,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     // ✅ Validación con Zod
-    console.log(body);
     const result = validatestop.safeParse(body);
-    console.log(result);
     if (!result.success) {
       return NextResponse.json(
         { error: "Invalid stop data", details: result.error.format() },
@@ -24,7 +22,7 @@ export async function POST(req: NextRequest) {
     // Guarda usando el _id como documento
     const stopsRef = collection(dbColectivero, "stops");
     const stopDoc = doc(stopsRef, stopId);
-    await setDoc(stopDoc, stop);
+    await setDoc(stopDoc, {...stop, _id: stopId});
     
     return NextResponse.json({ message: "stop created successfully", status: 201, data:{
       _id: stopId,

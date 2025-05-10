@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Station, StopSchema } from "@/db/stop.schema";
 import { fetchAll } from "@/lib/fetchingBy";
 import { useEffect, useState } from "react";
 
@@ -107,7 +106,6 @@ export default function StopsPage(){
       });
       const data = await response.json();
       if (data.status !== 201) throw new Error(data.error);
-      console.log(body)
       setFormData({
         ...formData,
         address: "",

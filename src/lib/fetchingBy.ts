@@ -4,7 +4,6 @@ export const fetchByParentId = async (id:string, endPoint: string)=>{
             method: "GET",
         })
         const data = await response.json();
-        console.log(data)
         return data;
     }catch(error){
         console.log("the error:",error)

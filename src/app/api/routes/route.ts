@@ -2,13 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { dbColectivero } from "@/lib/firebase";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { RouteSchema } from "@/db/route.schema"; // Ajusta path si es necesario
+import { randomUUID } from "crypto";
+
+const validateRoute = RouteSchema.omit({ _id: true});
+
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
-    // Validación con Zod
-    const result = RouteSchema.safeParse(body);
+// ✅ Validación con Zod
+    const result = validateRoute.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
         { error: "Invalid route data", details: result.error.format() },
@@ -17,8 +20,10 @@ export async function POST(req: NextRequest) {
     }
 
     const route = result.data;
-    const ref = doc(collection(dbColectivero, "routes"), route._id);
-    await setDoc(ref, route);
+    const routeId = randomUUID();
+
+    const ref = doc(collection(dbColectivero, "routes"), routeId);
+    await setDoc(ref, {...route, _id: routeId});
 
     return NextResponse.json(
       { message: "Route created successfully" },

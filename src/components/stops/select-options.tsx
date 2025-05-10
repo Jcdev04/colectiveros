@@ -17,7 +17,7 @@ export const SelectOptions = ({name, options, value, setValue}:{name:string, opt
                     <SelectValue placeholder={`Selecciona nombre de ${name}`}/>
                 </SelectTrigger>
                 <SelectContent>
-                    {
+                    { options.length !== 0 &&
                         options.map((item)=>(
                             <SelectItem key={item._id} value={item._id}>{item.name}</SelectItem>
                         ))
@@ -32,12 +32,10 @@ export const SelectOptionsByParent = ({name, options, setOptions, value, setValu
     useEffect(()=>{
         const fetchData = async  () =>{
             const data = await fetchByParentId(parentValue, endpoint)
-            console.log(data)
             setOptions(data)
         }
         if(parentValue){
             fetchData();
-            console.log(parentValue)
         }else{
             setOptions([])
         }
@@ -50,7 +48,7 @@ export const SelectOptionsByParent = ({name, options, setOptions, value, setValu
                     <SelectValue placeholder={`Selecciona nombre de ${name}`}/>
                 </SelectTrigger>
                 <SelectContent>
-                    {
+                    { options.length !== 0 && 
                         options.map((item)=>(
                             <SelectItem key={item._id} value={item._id}>{item.name}</SelectItem>
                         ))
