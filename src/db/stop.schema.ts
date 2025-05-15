@@ -22,22 +22,40 @@ export const ScheduleSchema = z.object({
 export type Schedule = z.infer<typeof ScheduleSchema>;
 
 export const LocationSchema = z.object({
-  country_id: z.string(),
-  region_id: z.string(),
-  province_id: z.string(),
-  district_id: z.string(),
-  locality_id: z.string(),
+  country: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  region: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  province: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  district: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  locality: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  address: z.string().optional(),
+  reference: z.string().optional(),
+  google_maps_url: z.string().url().optional(),
 });
 export type Location = z.infer<typeof LocationSchema>;
 
 export const StopSchema = z.object({
   _id: z.string(),
   name: z.string(),
-  company_id: z.string(),
-  address: z.string().optional(),
-  reference: z.string().optional(),
+  company: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
   phone: z.string(),
-  postal_code: z.string(),
   // agrupamos la ubicación
   location: LocationSchema,
   coordinates: z
@@ -47,7 +65,6 @@ export const StopSchema = z.object({
     })
     .optional(),
   schedule: z.array(ScheduleSchema),
-  google_maps_url: z.string().url().optional(),
 });
 
 export type Station = z.infer<typeof StopSchema>;

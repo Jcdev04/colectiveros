@@ -99,7 +99,6 @@ export default function StopsPage() {
     },
     google_maps_url: "",
     phone: "",
-    postal_code: "",
   });
 
   useEffect(() => {
@@ -127,16 +126,38 @@ export default function StopsPage() {
       const companyName = getNameByIdInState(company, companies);
       const nameStop = `${companyName} - ${localityName}`;
       const body = {
-        ...formData,
+        phone: formData.phone,
         name: nameStop,
         location: {
-          country_id: country,
-          region_id: region,
-          province_id: province,
-          district_id: district,
-          locality_id: locality,
+          address: formData.address,
+          reference: formData.reference,
+          google_maps_url: formData.google_maps_url,
+          coordinates: formData.coordinates,
+          country: {
+            id: country,
+            name: getNameByIdInState(country, countries),
+          },
+          region: {
+            id: region,
+            name: getNameByIdInState(region, regions),
+          },
+          province: {
+            id: province,
+            name: getNameByIdInState(province, provinces),
+          },
+          district: {
+            id: district,
+            name: getNameByIdInState(district, districts),
+          },
+          locality: {
+            id: locality,
+            name: localityName,
+          },
         },
-        company_id: company,
+        company: {
+          id: company,
+          name: companyName,
+        },
         schedule,
       };
       console.log("body", body);
@@ -156,7 +177,6 @@ export default function StopsPage() {
         reference: "",
         google_maps_url: "",
         phone: "",
-        postal_code: "",
       });
       setCompany("");
       setSchedule([]);
@@ -276,16 +296,6 @@ export default function StopsPage() {
                       name="phone"
                       type="phone"
                       value={formData.phone}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="postal_code">Código Postal</Label>
-                    <Input
-                      id="postal_code"
-                      name="postal_code"
-                      type="text"
-                      value={formData.postal_code}
                       onChange={handleInputChange}
                     />
                   </div>

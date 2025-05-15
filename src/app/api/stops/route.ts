@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   query,
   setDoc,
   where,
@@ -12,7 +13,7 @@ import {
 import { StopSchema } from "@/db/stop.schema"; // ajusta el path si lo tienes en otro lugar
 import { randomUUID } from "crypto";
 
-const validatestop = StopSchema.omit({ _id: true, google_maps_url: true });
+const validatestop = StopSchema.omit({ _id: true });
 
 export async function POST(req: NextRequest) {
   try {
@@ -62,7 +63,7 @@ export async function GET(req: NextRequest) {
     const stopsRef = collection(dbColectivero, "stops");
     const stopsQ = query(
       stopsRef,
-      where("location.locality_id", "==", localityId)
+      where("location.locality.id", "==", localityId)
     );
     const stopsSnap = await getDocs(stopsQ);
 
@@ -73,35 +74,38 @@ export async function GET(req: NextRequest) {
 
         // Rutas salientes
         const routesRef = collection(dbColectivero, "routes");
-        const routesQ = query(routesRef, where("origin_id", "==", stopDoc.id));
-        const routesSnap = await getDocs(routesQ);
-
-        const routes = await Promise.all(
-          routesSnap.docs.map(async (routeDoc) => {
-            const r = routeDoc.data() as any;
-
-            // Lookup del nombre de destino
-            const destDoc = await getDoc(
-              doc(dbColectivero, "stops", r.destination_id)
-            );
-            const destination_name =
-              destDoc.exists() && destDoc.data()
-                ? (destDoc.data() as any).name
-                : null;
-
-            return {
-              _id: routeDoc.id,
-              origin_id: r.origin_id,
-              destination_id: r.destination_id,
-              destination_name,
-              duration_minutes: r.duration_minutes,
-              fare_pen: r.fare_pen,
-              schedule: r.schedule,
-            };
-          })
+        const routesQ = query(
+          routesRef,
+          where("origin_id", "==", stopDoc.id),
+          limit(1)
         );
+        const routeSnap = await getDocs(routesQ);
 
-        return { ...stopData, routes };
+        let route = null;
+        if (!routeSnap.empty) {
+          const routeDoc = routeSnap.docs[0];
+          const r = routeDoc.data() as any;
+
+          // Lookup del nombre de destino
+          const destDoc = await getDoc(
+            doc(dbColectivero, "stops", r.destination_id)
+          );
+          const destination =
+            destDoc.exists() && destDoc.data() ? (destDoc.data() as any) : null;
+
+          route = {
+            _id: routeDoc.id,
+            origin_id: r.origin_id,
+            destination_id: r.destination_id,
+            destination_name: destination.name,
+            destination_locality: destination.location.locality.name,
+            destion_locality: r.destionation,
+            duration_minutes: r.duration_minutes,
+            fare_pen: r.fare_pen,
+            schedule: r.schedule,
+          };
+        }
+        return { ...stopData, route };
       })
     );
 
