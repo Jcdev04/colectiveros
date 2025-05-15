@@ -23,7 +23,7 @@ const Localidades = () => {
     <div className="space-y-2">
       <SelectType
         type="Localidades"
-        nextPath="paraderos"
+        nextPath="stops"
         initialLoad={initialLoad}
       />
     </div>

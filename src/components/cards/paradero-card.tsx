@@ -1,10 +1,14 @@
+"use client";
 import { MapPin, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function ParaderoCard({ paradero }: any) {
+  const pathName = usePathname();
+
   return (
-    <Link href={`/paraderos/${paradero._id}`}>
+    <Link href={`${pathName}/${paradero._id}`}>
       <Card className="overflow-hidden transition-all duration-200 hover:shadow-lg cursor-pointer border-gray-100 relative">
         <CardContent>
           <div className="flex flex-col gap-2">

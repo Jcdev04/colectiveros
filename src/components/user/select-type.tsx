@@ -45,7 +45,7 @@ const SelectType = ({
       <Link href={`${pathName}/${value}/${nextPath}`}>
         <Button
           variant="outline"
-          className="text-gray-700 hover:bg-gray-100 mt-4"
+          className="text-white hover:bg-indigo-400 hover:text-white bg-indigo-500  mt-4"
         >
           Siguiente
         </Button>
