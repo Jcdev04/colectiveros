@@ -5,5 +5,6 @@ export const CompanySchema = z.object({
   name: z.string(),
   phone: z.string(),
   logo: z.string().optional(),
+  user_id: z.string().optional(),
 });
 export type Company = z.infer<typeof CompanySchema>;
