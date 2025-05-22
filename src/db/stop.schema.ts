@@ -19,7 +19,11 @@ export const ScheduleSchema = z.object({
   is_available: z.boolean(),
 });
 
+// build an array schema once:
+export const ScheduleArraySchema = ScheduleSchema.array();
+
 export type Schedule = z.infer<typeof ScheduleSchema>;
+export type ScheduleList = z.infer<typeof ScheduleArraySchema>;
 
 export const LocationSchema = z.object({
   country: z.object({

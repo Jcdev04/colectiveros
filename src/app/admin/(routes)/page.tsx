@@ -60,8 +60,6 @@ export default function RoutesPage() {
       duration_minutes: parseInt(duration),
       fare_pen: parseFloat(farePen),
     };
-    console.log(body);
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/routes`,
@@ -72,7 +70,6 @@ export default function RoutesPage() {
         }
       );
       const data = await response.json();
-      console.log(data);
       setCompany("");
       setParaderoPuntoA("");
       setParaderoPuntoB("");
