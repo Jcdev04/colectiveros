@@ -15,30 +15,36 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-          
+
         try {
           // Use absolute URL for the API request
-          const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-          const response = await fetch(`${baseUrl}/api/users?email=${credentials.email}`);
-          
+          const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+          const response = await fetch(
+            `${baseUrl}/api/users?email=${credentials.email}`
+          );
+
           if (!response.ok) {
-            throw new Error('Failed to fetch user');
+            throw new Error("Failed to fetch user");
           }
-          
-          const user = await response.json();
-          
-          if (!user) return null;
-          
-          const passwordMatch = await comparePassword(credentials.password, user.user.password);
+
+          const data = await response.json();
+
+          if (!data) return null;
+
+          const passwordMatch = await comparePassword(
+            credentials.password,
+            data.user.password
+          );
           if (!passwordMatch) return null;
+          console.log(data.user);
           return {
-            id: user.user._id,
-            name: user.user.name,
-            email: user.user.email,
-            role: user.user.role,
+            id: data.user._id,
+            name: data.user.name,
+            email: data.user.email,
+            role: data.user.role,
           };
         } catch (error) {
-          console.error('Authentication error:', error);
+          console.error("Authentication error:", error);
           return null;
         }
       },
@@ -55,9 +61,9 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       session.user = token.user as User;
       return session;
-    }
+    },
   },
   pages: {
     signIn: "/inicio-sesion",
-  }
+  },
 };

@@ -1,7 +1,14 @@
 //create user
 import { NextRequest, NextResponse } from "next/server";
 import { dbColectivero } from "@/lib/firebase";
-import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { UserSchema } from "@/db/user.schema";
 import { randomUUID } from "crypto";
 import { hashPassword } from "@/lib/handlePassword";
@@ -23,12 +30,16 @@ export async function POST(req: NextRequest) {
     const ref = doc(collection(dbColectivero, "users"), _id);
     user.password = await hashPassword(user.password);
     const createdAt = new Date().toISOString();
-    await setDoc(ref, { ...user, createdAt });
-    return NextResponse.json({ message: "User created successfully" }, { status: 201 }
+    await setDoc(ref, { ...user, createdAt, _id });
+    return NextResponse.json(
+      { message: "User created successfully" },
+      { status: 201 }
     );
   } catch (err: any) {
     console.error("[USER_POST_ERROR]", err);
-    return NextResponse.json({ error: "Failed to create user", details: err.message }, { status: 500 }
+    return NextResponse.json(
+      { error: "Failed to create user", details: err.message },
+      { status: 500 }
     );
   }
 }
@@ -39,13 +50,13 @@ export async function GET(req: NextRequest) {
   //involve into trycath
   try {
     //email is in users collection, get user by email with where clause
-    const ref = query(collection(dbColectivero, "users"), where("email", "==", email));
+    const ref = query(
+      collection(dbColectivero, "users"),
+      where("email", "==", email)
+    );
     const docSnap = await getDocs(ref);
     if (docSnap.empty) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
     const user = docSnap.docs[0].data();
     return NextResponse.json({
@@ -54,8 +65,10 @@ export async function GET(req: NextRequest) {
       status: 200,
     });
   } catch (err: any) {
-  console.error("[USER_GET_ERROR]", err);
-  return NextResponse.json({ error: "Failed to get user", details: err.message }, { status: 500 }
-  );
-}
+    console.error("[USER_GET_ERROR]", err);
+    return NextResponse.json(
+      { error: "Failed to get user", details: err.message },
+      { status: 500 }
+    );
+  }
 }

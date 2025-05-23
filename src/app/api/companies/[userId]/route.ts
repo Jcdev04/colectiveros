@@ -3,28 +3,32 @@ import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Id {
-  companyId: string;
+  userId: string;
 }
 /**
  * Get Stops by
- * @param companyId
+ * @param userId
  */
 export async function GET(req: NextRequest, { params }: { params: Id }) {
   try {
     const param = await params;
+    console.log("param", param.userId);
     const q = query(
       collection(dbColectivero, "companies"),
-      where("user.id", "==", param.companyId),
+      where("user_id", "==", param.userId),
       limit(1)
     );
     const querySnapshot = await getDocs(q);
-    const company = querySnapshot.docs[0].data();
+    const company = querySnapshot.docs[0];
 
-    return NextResponse.json(company);
+    if (!company) {
+      return NextResponse.json({ error: "Company not found", status: 404 });
+    }
+    return NextResponse.json(company.data());
   } catch (error) {
-    console.error("Error fetching stops:", error);
+    console.error("Error fetching company by UserId:", error);
     return NextResponse.json(
-      { error: "Failed to fetch stops" },
+      { error: "Failed to fetch company by UserId" },
       { status: 500 }
     );
   }
