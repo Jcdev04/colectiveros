@@ -27,7 +27,7 @@ export default function LoginPage() {
         throw new Error(response.error);
       }
       toast.success("Ingreso exitoso");
-      router.push("/colectivero/onboarding");
+      router.push("/colectivero");
     } catch (error) {
       console.error("Error during sign-in:", error);
     }

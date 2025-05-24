@@ -24,7 +24,7 @@ export async function GET(req: NextRequest, { params }: { params: Id }) {
     if (!company) {
       return NextResponse.json({ error: "Company not found", status: 404 });
     }
-    return NextResponse.json(company.data());
+    return NextResponse.json({ status: "200", data: company.data() });
   } catch (error) {
     console.error("Error fetching company by UserId:", error);
     return NextResponse.json(

@@ -1,5 +1,8 @@
-const layout = ({ children }: { children: React.ReactNode }) => {
-  return <div>{children}</div>;
+import { CompanyProvider } from "@/context/CompanyContext";
+import React, { ReactNode } from "react";
+
+const layout = ({ children }: { children: ReactNode }) => {
+  return <CompanyProvider>{children}</CompanyProvider>;
 };
 
 export default layout;

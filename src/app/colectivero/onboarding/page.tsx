@@ -8,38 +8,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Bus, Building, Phone, ArrowRight } from "lucide-react";
+import { useCompany } from "@/context/CompanyContext";
 const OnBoarding = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const session = useSession();
+  const { setCompany } = useCompany();
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchCompanyByUserId = async () => {
-      // session.data.user.id is not valid because is not being saved in the collection
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/companies/${session?.data?.user?.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      if (data.status === 404) {
-        setIsLoading(false);
-      } else {
-        router.push("/colectivero");
-      }
-    };
-    fetchCompanyByUserId();
-  }, []);
-
   const registerCompany = async (formData: FormData) => {
+    console.log("session", session?.data?.user?.id);
     const payload = {
       name: formData.get("companyName"),
       phone: formData.get("phone"),
       user_id: session?.data?.user?.id,
+      logo: "",
     };
 
     const response = await fetch(
@@ -60,14 +41,14 @@ const OnBoarding = () => {
     const formData = new FormData(e.currentTarget);
     const result = await registerCompany(formData);
     // Handle result (e.g., show success/error, redirect, etc.)
-    console.log(result);
+    console.log("Company registration result:", result);
+    if (result.status === 201) {
+      setCompany(result.data);
+      router.push("/colectivero/inicio");
+    }
   };
 
-  return isLoading ? (
-    <div className="flex justify-center items-center h-screen">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
-    </div>
-  ) : (
+  return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-100">
