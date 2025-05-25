@@ -71,4 +71,4 @@ export const StopSchema = z.object({
   schedule: z.array(ScheduleSchema),
 });
 
-export type Station = z.infer<typeof StopSchema>;
+export type Stop = z.infer<typeof StopSchema>;

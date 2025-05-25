@@ -23,9 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: Id }) {
     }));
     return NextResponse.json(stops);
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch stops" },
-      { status: 500 }
-    );
+    console.error("Error fetching stops:", error);
+    return NextResponse.json({ error: "Failed to fetch stops", status: 500 });
   }
 }
