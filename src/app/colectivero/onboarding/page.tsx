@@ -44,7 +44,7 @@ const OnBoarding = () => {
     console.log("Company registration result:", result);
     if (result.status === 201) {
       setCompany(result.data);
-      router.push("/colectivero/stops");
+      router.push("/colectivero/paraderos");
     }
   };
 

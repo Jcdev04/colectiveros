@@ -1,8 +1,11 @@
+"use client";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Bus } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const Header = () => {
+  const { data } = useSession();
   return (
     <header className="border-b border-gray-100">
       <div className="container mx-auto px-4 py-4">
@@ -13,7 +16,7 @@ const Header = () => {
               Chapaturuta
             </span>
           </div>
-          <nav className="hidden md:flex items-center space-x-6">
+          {/* <nav className="hidden md:flex items-center space-x-6">
             <Link
               href="#"
               className="text-gray-600 hover:text-indigo-600 text-sm font-medium"
@@ -38,19 +41,24 @@ const Header = () => {
             >
               Contacto
             </Link>
-          </nav>
+          </nav> */}
           <div className="flex items-center space-x-3">
-            <Link href={"/register"}>
-              <Button
-                variant="ghost"
-                className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50"
-              >
-                ¿Eres un colectivero? Regístrate
-              </Button>
-            </Link>
-            {/* <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-              Registrarse
-            </Button> */}
+            {data?.user?.role !== "manager" ? (
+              <Link href={"/register"}>
+                <Button
+                  variant="ghost"
+                  className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50"
+                >
+                  ¿Eres un colectivero? Regístrate
+                </Button>
+              </Link>
+            ) : (
+              <Link href={"/colectivero"}>
+                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                  Ingresar a la plataforma
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

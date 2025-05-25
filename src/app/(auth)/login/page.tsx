@@ -91,6 +91,15 @@ export default function LoginPage() {
                     />
                     <button
                       type="button"
+                      onClick={() => {
+                        const passwordInput = document.getElementById(
+                          "password"
+                        ) as HTMLInputElement;
+                        passwordInput.type =
+                          passwordInput.type === "password"
+                            ? "text"
+                            : "password";
+                      }}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
                       <EyeOff className="h-5 w-5" />
@@ -98,7 +107,7 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <input
                       id="remember"
@@ -118,7 +127,7 @@ export default function LoginPage() {
                   >
                     ¿Olvidaste tu contraseña?
                   </Link>
-                </div>
+                </div> */}
               </div>
 
               <Button

@@ -38,6 +38,7 @@ import { useEffect, useState } from "react";
 import { Stop, Schedule } from "@/db/stop.schema";
 import { useCompany } from "@/context/CompanyContext";
 import { set } from "zod";
+import toast from "react-hot-toast";
 
 interface Place {
   _id: string;
@@ -185,7 +186,6 @@ export default function StopsPage() {
         },
         schedule,
       };
-      console.log("body", body);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/stops`,
         {
@@ -195,7 +195,10 @@ export default function StopsPage() {
         }
       );
       const data = await response.json();
-      if (data.status !== 201) throw new Error(data.error);
+      if (data.status !== 201) {
+        toast.error("Error creando paradero");
+        throw new Error(data.error);
+      }
       setStops((prev) => [...prev, data.data]);
       setFormData({
         ...formData,
@@ -205,8 +208,10 @@ export default function StopsPage() {
         phone: "",
       });
       setSchedule([]);
+      toast.success("Paradero creado con éxito");
     } catch (error) {
-      console.error("Error creating station:", error);
+      toast.error("Error creando paradero");
+      console.error("Error creating stop:", error);
     } finally {
       setIsLoading(false);
     }
@@ -462,20 +467,26 @@ function DialogSchedule({
       !timeTo.hours &&
       !timeTo.minutes
     ) {
-      alert("todos los campos deben estar llenos");
+      toast.error("todos los campos deben estar llenos");
       return;
     }
     const timeFromStr = `${timeFrom.hours}:${timeFrom.minutes}`;
     const timeToStr = `${timeTo.hours}:${timeTo.minutes}`;
 
     if (timeFromStr > timeToStr) {
-      alert("El tiempo de inicio debe ser menor que el tiempo de finalización");
+      toast.error(
+        "El tiempo de inicio debe ser menor que el tiempo de finalización"
+      );
       return;
     }
-    if (indexDays.length === 0) alert("Debe seleccionar al menos un día");
+    if (indexDays.length === 0) {
+      toast.error("Debe seleccionar al menos un día");
+      return;
+    }
 
     const schedule = createScheduleArr(timeFromStr, timeToStr);
     onLoadSchedule(schedule);
+    toast.success("Horario creado correctamente");
   };
 
   const createScheduleArr = (from: string, to: string): Schedule[] => {
@@ -547,7 +558,7 @@ function DialogSchedule({
           </div>
           <DialogFooter>
             <Button type="button" onClick={onSubmit}>
-              Save changes
+              Guardar cambios
             </Button>
           </DialogFooter>
         </div>

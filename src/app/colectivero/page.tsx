@@ -12,7 +12,7 @@ export default function ColectiveroIndex() {
   useEffect(() => {
     if (loading) return;
     console.log(company);
-    router.push(company ? "/colectivero/stops" : "/colectivero/onboarding");
+    router.push(company ? "/colectivero/paraderos" : "/colectivero/onboarding");
   }, [loading, company, router]);
 
   return <p>Cargando…</p>;

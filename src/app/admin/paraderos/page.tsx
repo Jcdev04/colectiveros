@@ -36,6 +36,7 @@ import { Switch } from "@/components/ui/switch";
 import { PencilIcon } from "@heroicons/react/16/solid";
 
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 interface Place {
   _id: string;
@@ -427,20 +428,25 @@ function DialogSchedule({
       !timeTo.hours &&
       !timeTo.minutes
     ) {
-      alert("todos los campos deben estar llenos");
+      toast.error("Debes seleccionar al menos un día");
       return;
     }
     const timeFromStr = `${timeFrom.hours}:${timeFrom.minutes}`;
     const timeToStr = `${timeTo.hours}:${timeTo.minutes}`;
 
     if (timeFromStr > timeToStr) {
-      alert("El tiempo de inicio debe ser menor que el tiempo de finalización");
+      toast.error(
+        "El tiempo de inicio debe ser menor que el tiempo de finalización"
+      );
       return;
     }
-    if (indexDays.length === 0) alert("Debe seleccionar al menos un día");
-
+    if (indexDays.length === 0) {
+      toast.error("Debe seleccionar al menos un día");
+      return;
+    }
     const schedule = createScheduleArr(timeFromStr, timeToStr);
     onLoadSchedule(schedule);
+    toast.success("Horario creado correctamente");
   };
 
   const createScheduleArr = (from: string, to: string): Schedule[] => {
@@ -512,7 +518,7 @@ function DialogSchedule({
           </div>
           <DialogFooter>
             <Button type="button" onClick={onSubmit}>
-              Save changes
+              Guardar cambios
             </Button>
           </DialogFooter>
         </div>

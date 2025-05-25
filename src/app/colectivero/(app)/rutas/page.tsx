@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useCompany } from "@/context/CompanyContext";
+import toast from "react-hot-toast";
 
 /**
  * Types into component
@@ -72,8 +73,14 @@ export default function RoutesPage() {
       setParaderoPuntoB("");
       setDuration("");
       setFarePen("");
+      if (data.status === 201) {
+        toast.success("Ruta creada correctamente");
+      } else {
+        toast.error("Error al crear la ruta");
+      }
     } catch (e) {
       console.log(e);
+      toast.error("Error al crear la ruta");
     }
   };
 

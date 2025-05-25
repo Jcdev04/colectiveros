@@ -12,7 +12,7 @@ const navItems = [
     icon: StopIcon,
   },
   {
-    title: "Lugares",
+    title: "Rutas",
     href: "/colectivero/rutas",
     icon: MapIcon,
   },

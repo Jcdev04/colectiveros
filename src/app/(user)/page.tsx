@@ -153,7 +153,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div>
+              {/* <div>
                 <h3 className="font-bold text-white mb-4">Plataforma</h3>
                 <ul className="space-y-2 text-sm">
                   <li>
@@ -177,7 +177,7 @@ export default function Home() {
                     </Link>
                   </li>
                 </ul>
-              </div>
+              </div> */}
 
               <div>
                 <h3 className="font-bold text-white mb-4">Recursos</h3>
