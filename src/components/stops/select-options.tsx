@@ -13,7 +13,13 @@ interface Place {
   _id: string;
   name: string;
 }
-
+interface Stop {
+  _id: string;
+  name: string;
+  location: {
+    address: string;
+  };
+}
 export const SelectOptions = ({
   name,
   options,
@@ -94,7 +100,63 @@ export const SelectOptionsByParent = ({
           {options.length !== 0 &&
             options.map((item) => (
               <SelectItem key={item._id} value={item._id}>
-                {item.name}
+                <p>{item.name}</p>
+              </SelectItem>
+            ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+};
+
+export const SelectOptionsByParentWithDescription = ({
+  name,
+  options,
+  setOptions,
+  value,
+  setValue,
+  parentValue,
+  endpoint,
+}: {
+  name: string;
+  options: Stop[];
+  setOptions: React.Dispatch<React.SetStateAction<Stop[]>>;
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  parentValue: string;
+  endpoint: string;
+}) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchByParentId(parentValue, endpoint);
+      setOptions(data);
+      console.log(data);
+    };
+    if (parentValue) {
+      fetchData();
+    } else {
+      setOptions([]);
+    }
+  }, [parentValue]);
+  return (
+    <div className="space-y-2">
+      <Label>{name}</Label>
+      <Select
+        disabled={!parentValue}
+        value={value}
+        onValueChange={(item) => {
+          setValue(item);
+        }}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder={`Selecciona nombre de ${name}`} />
+        </SelectTrigger>
+        <SelectContent>
+          {options.length !== 0 &&
+            options.map((item) => (
+              <SelectItem key={item._id} value={item._id} className="flex-col ">
+                <p>{item.name}</p>
+                <p>{item.location.address}</p>
               </SelectItem>
             ))}
         </SelectContent>
